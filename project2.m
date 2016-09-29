@@ -3,6 +3,9 @@
 % first, cd to IAT toolbox directory and add it to path with setup utility
 run('~/iat/iat_setup')
 
+% add export fig utility to path
+addpath('export_fig/')
+
 % set dimensions of input images to be resized to
 dim = [256 256];
 
@@ -17,11 +20,11 @@ patchsize = 8; % half of the window size for computing SIFT
 gridspacing = 1; % sampling step
 
 fixed_moving_fps = containers.Map;
-%fixed_moving_fps('pics/cantilever_layout1e.bmp')={'pics/cantilever1_1.jpg', 'pics/cantilever1_2.jpg'};
-fixed_moving_fps('pics/cantilever_layout2.bmp')={'pics/cantilever2_1.jpg', 'pics/cantilever2_2.jpg'};
-fixed_moving_fps('pics/cantilever_layout3.bmp')={'pics/cantilever3_1.jpg', 'pics/cantilever3_2.jpg'};
-fixed_moving_fps('pics/cantilever_layout4.bmp')={'pics/cantilever4_1.jpg', 'pics/cantilever4_2.jpg'};
-fixed_moving_fps('pics/cantilever_layout5.bmp')={'pics/cantilever5.jpg'};
+fixed_moving_fps('pics/cantilever_layout1.bmp')={'pics/cantilever1_1.jpg', 'pics/cantilever1_2.jpg'};
+% fixed_moving_fps('pics/cantilever_layout2.bmp')={'pics/cantilever2_1.jpg', 'pics/cantilever2_2.jpg'};
+% fixed_moving_fps('pics/cantilever_layout3.bmp')={'pics/cantilever3_1.jpg', 'pics/cantilever3_2.jpg'};
+% fixed_moving_fps('pics/cantilever_layout4.bmp')={'pics/cantilever4_1.jpg', 'pics/cantilever4_2.jpg'};
+% fixed_moving_fps('pics/cantilever_layout5.bmp')={'pics/cantilever5.jpg'};
 % fixed_moving_fps('pics/cantilever_layout6_1.bmp')={'pics/cantilever6.jpg'};
 % fixed_moving_fps('pics/cantilever_layout6_2.bmp')={'pics/cantilever6.jpg'};
 % fixed_moving_fps('pics/cantilever_layout7.bmp')={'pics/cantilever7.jpg'};
@@ -47,7 +50,7 @@ for key = fm_keys
         [sift_fixed,sift_moving,gray_error,rgb_error]=...
             sift_flow(moving,fixed,patchsize,gridspacing,SIFTflowparams);
         
-        % plot results including registration error
+        % plot results including registration error and save to files
         plot_sift_flow_results(sift_fixed,sift_moving,gray_error,rgb_error, counter);
         
         i = i+1;
