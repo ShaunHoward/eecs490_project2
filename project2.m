@@ -1,51 +1,56 @@
-% Register two images with SIFT and RANSAC
-% run this before use: run('VLFEATROOT/toolbox/vl_setup')
-% more directions here: http://www.vlfeat.org/install-matlab.html
-run('~/vlfeat-0.9.20/toolbox/vl_setup');
+% Register two images with SIFTFlow
+
+% first, cd to IAT toolbox directory and add it to path with setup utility
+run('~/iat/iat_setup')
 
 % set dimensions of input images to be resized to
 dim = [256 256];
 
-% read in unregistered image
-unregistered = imresize(imread('pics/cantilever1_2.jpg'), dim);
-% allow user to crop image
-%[unregistered,~] = imcrop(unregistered);
-%unregistered
-%figure, imshow(unregistered)
-
-% read in reference image
-reference = imresize(imread('pics/cantilever_layout1e.bmp'), dim);
-% allow user to crop image
-%[reference,~] = imcrop(reference);
-%reference
-%figure, imshow(reference)
-
-im1 = rgb2gray(reference);
-size(im1)
-im2 = rgb2gray(unregistered);
-size(im2)
+SIFTflowparams.alpha=0.01;
+SIFTflowparams.d=0.2;
+SIFTflowparams.gamma=0.001;
+SIFTflowparams.nlevels=4;
+SIFTflowparams.wsize=3;
+SIFTflowparams.topwsize=10;
+SIFTflowparams.nIterations=60;
 patchsize = 8; % half of the window size for computing SIFT
 gridspacing = 1; % sampling step
-SiftIm1=iat_dense_sift(im2double(im1),patchsize,gridspacing);
-SiftIm2=iat_dense_sift(im2double(im2),patchsize,gridspacing); 
-figure;imshow(iat_sift2rgb(SiftIm1));title('SIFT image 1');
-figure;imshow(iat_sift2rgb(SiftIm2));title('SIFT image 2');
 
-SIFTflowpara.alpha=0.01;
-SIFTflowpara.d=0.2;
-SIFTflowpara.gamma=0.001;
-SIFTflowpara.nlevels=4;
-SIFTflowpara.wsize=3;
-SIFTflowpara.topwsize=10;
-SIFTflowpara.nIterations=60;
-[vx, vy, energylist] = iat_SIFTflow(SiftIm1, SiftIm2, SIFTflowpara);
+fixed_moving_fps = containers.Map;
+%fixed_moving_fps('pics/cantilever_layout1e.bmp')={'pics/cantilever1_1.jpg', 'pics/cantilever1_2.jpg'};
+fixed_moving_fps('pics/cantilever_layout2.bmp')={'pics/cantilever2_1.jpg', 'pics/cantilever2_2.jpg'};
+fixed_moving_fps('pics/cantilever_layout3.bmp')={'pics/cantilever3_1.jpg', 'pics/cantilever3_2.jpg'};
+fixed_moving_fps('pics/cantilever_layout4.bmp')={'pics/cantilever4_1.jpg', 'pics/cantilever4_2.jpg'};
+fixed_moving_fps('pics/cantilever_layout5.bmp')={'pics/cantilever5.jpg'};
+% fixed_moving_fps('pics/cantilever_layout6_1.bmp')={'pics/cantilever6.jpg'};
+% fixed_moving_fps('pics/cantilever_layout6_2.bmp')={'pics/cantilever6.jpg'};
+% fixed_moving_fps('pics/cantilever_layout7.bmp')={'pics/cantilever7.jpg'};
+% fixed_moving_fps('pics/corona_layout_1.bmp')={'pics/corona1.jpg'};
+% fixed_moving_fps('pics/corona_layout_2.bmp')={'pics/corona2.jpg'};
 
-newIm2 = im2(patchsize/2+1:end-patchsize/2, patchsize/2+1:end-patchsize/2);
-[warpedIm2, support] = iat_pixel_warping(newIm2, vx, vy);
-newIm1 = im1(patchsize/2+1:end-patchsize/2, patchsize/2+1:end-patchsize/2);
-[~, grayerror] = iat_error2gray(newIm1,warpedIm2,support);
-figure;imshow(newIm1);title('Image1');
-figure;imshow(uint8(warpedIm2)); title('Warped Image2');
-figure;imshow(grayerror); title('Registration error'); 
-
-figure;imshow(iat_error2rgb(uint8(newIm1),uint8(warpedIm2)));title('Colorized alignment error');
+counter = 1;
+fm_keys = keys(fixed_moving_fps);
+for key = fm_keys
+    key = key{1};
+    % read in reference image via path used as dictionary key
+    fixed = imresize(imread(key), dim);
+    unregistered_paths = fixed_moving_fps(key);
+    n_unreg = size(unregistered_paths);
+    n_unreg = n_unreg(2);
+    i = 1;
+    while i <= n_unreg
+        % read in unregistered image from list of paths
+        u_path = unregistered_paths{i};
+        moving = imresize(imread(u_path), dim);
+        
+        % run sift flow
+        [sift_fixed,sift_moving,gray_error,rgb_error]=...
+            sift_flow(moving,fixed,patchsize,gridspacing,SIFTflowparams);
+        
+        % plot results including registration error
+        plot_sift_flow_results(sift_fixed,sift_moving,gray_error,rgb_error, counter);
+        
+        i = i+1;
+        counter = counter+1;
+    end
+end
