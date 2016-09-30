@@ -1,5 +1,5 @@
 function [sift_fixed,sift_moving,gray_error,rgb_error]=sift_flow(moving, fixed, patchsize, gridspacing, SIFTflow_params)
-% utilizies the Image Alignment Toolbox (IAT) to perform SIFT Flow
+% utilizes the Image Alignment Toolbox (IAT) to perform SIFT Flow
 
 % convert images to grayscale and display sizes
 fixed = rgb2gray(fixed);
