@@ -3,7 +3,7 @@
 % author: Shaun Howard (smh150@case.edu)
 
 % prompt user to use sift flow algorithm (1) or choose manual registration (0)
-use_sift_flow = 0; %input('Please enter 1 to utilize SIFTFlow automatic registration or 0 to perform manual registration: ');
+use_sift_flow = input('Please enter 1 to utilize SIFTFlow automatic registration or 0 to perform manual registration: ');
 
 % set renderer to OpenGL
 set(gcf,'renderer','OpenGL');
@@ -62,7 +62,7 @@ for key = fm_keys
         % read in unregistered image from list of paths
         u_path = unregistered_paths{i};
         moving = imresize(imread(u_path), dim);
-        display(sprintf('Registering image %d\n', current));
+        display(sprintf('Registering image %d\n', counter));
         
         if use_sift_flow
             % use sift flow registration
