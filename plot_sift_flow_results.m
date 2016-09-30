@@ -1,4 +1,4 @@
-function plot_sift_flow_results(fixed,moving,sift_fixed,sift_moving,registered,gray_error,rgb_error,xcorr,counter)
+function plot_sift_flow_results(fixed,moving,sift_fixed,sift_moving,registered,gray_error,rgb_error,xcorr,counter,write_output)
     % plot results with subplot tight without spaces between images
     % author: Shaun Howard (smh150@case.edu)
 
@@ -19,9 +19,11 @@ function plot_sift_flow_results(fixed,moving,sift_fixed,sift_moving,registered,g
     subplot_tight(2,4,7,margins);
     imshow(rgb_error);
     
-    % export subplot figure as bmp image
-    output_path = sprintf('output/sift_flow_trial_%d.bmp', counter);
-    export_fig(output_path);
+    if write_output
+        % export subplot figure as bmp image
+        output_path = sprintf('output/sift_flow_trial_%d.bmp', counter);
+        export_fig(output_path);
+    end
     
     % plot normalized xcorr
     xcorr_size=size(xcorr);
@@ -34,7 +36,9 @@ function plot_sift_flow_results(fixed,moving,sift_fixed,sift_moving,registered,g
     colorbar
     title(xcorr_title);
     
-    % export the normalized cross-correlation
-    output_path = sprintf('output/sift_flow_trial_%d_xcorr.bmp', counter);
-    export_fig(output_path);
+    if write_output
+        % export the normalized cross-correlation
+        output_path = sprintf('output/sift_flow_trial_%d_xcorr.bmp', counter);
+        export_fig(output_path);
+    end
 end

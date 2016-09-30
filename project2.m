@@ -5,6 +5,12 @@
 % prompt user to use sift flow algorithm (1) or choose manual registration (0)
 use_sift_flow = input('Please enter 1 to utilize SIFTFlow automatic registration or 0 to perform manual registration: ');
 
+% prompt user about writing output to files: 1=yes, 0=no
+write_output=0;
+
+% prompt user about holding open graph windows
+hold_windows_open=1;
+
 % set renderer to OpenGL
 set(gcf,'renderer','OpenGL');
 
@@ -70,18 +76,20 @@ for key = fm_keys
                 sift_flow(moving,fixed,patchsize,gridspacing,SIFTflowparams,@mse_fn);
 
             % plot results including registration error and save to files
-            plot_sift_flow_results(fixed,moving,sift_fixed,sift_moving,registered,gray_error,rgb_error,xcorr,counter);
+            plot_sift_flow_results(fixed,moving,sift_fixed,sift_moving,registered,gray_error,rgb_error,xcorr,counter,write_output);
         else
             % use manual registration
             [warped,registered,gray_error,rgb_error,mse,moving_points,fixed_points,r,xcorr]=...
                 manual_registration(moving,fixed,@mse_fn);
             
             % plot results including registration error and save to files
-            plot_manual_registration_results(fixed,moving,warped,registered,gray_error,rgb_error,xcorr,counter);
+            plot_manual_registration_results(fixed,moving,warped,registered,gray_error,rgb_error,xcorr,counter,write_output);
         end
+        
         % calculate rmse from mse and the coefficient of determination
         rmse = sqrt(mse);
         r2=r^2;
+        
         % print mse, rmse, and correlation coefficient between both images
         display(sprintf('Mean Squared Error (MSE) for trial %d: %f',counter,mse))
         display(sprintf('Root-mean Squared Error (RMSE) for trial %d: %f',counter,rmse))
@@ -91,18 +99,24 @@ for key = fm_keys
         % write rmse, mse, correlation coefficient (r) and coefficient of determination (r^2) to list
         error_list(counter,:)=[counter;mse;rmse;r;r2];
                 
-        % close graphs for speed up
-        close all
+        if ~hold_windows_open
+            % close graphs for speed up
+            close all
+        end
         
         i = i+1;
         counter = counter+1;
     end
 end
-error_table = table(error_list(:,1),error_list(:,2),error_list(:,3),error_list(:,4),error_list(:,5));
-error_table.Properties.VariableNames={'trial','mse','rmse','r','rxr'};
-if use_sift_flow
-    err_out = 'sift';
-else
-    err_out = 'manual';
+
+if write_output
+    % write error table to csv file with either 'sift' or 'manual' prefix
+    error_table = table(error_list(:,1),error_list(:,2),error_list(:,3),error_list(:,4),error_list(:,5));
+    error_table.Properties.VariableNames={'trial','mse','rmse','r','rxr'};
+    if use_sift_flow
+        err_out = 'sift';
+    else
+        err_out = 'manual';
+    end
+    writetable(error_table, sprintf('output/%s_trial_errors.csv',err_out),'Delimiter',',');
 end
-writetable(error_table, sprintf('output/%s_trial_errors.csv',err_out),'Delimiter',',');

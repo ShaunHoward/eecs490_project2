@@ -25,3 +25,9 @@ external libraries used from FEX and IAT website:
 subplot_tight
 iat - image alignment toolbox
 normxcorr2_general
+
+Tried to use complement of image to fix lighting match-up issues on error
+image, but couldn't. Sift still worked the same despite these changes, 
+hence the invariance to lighting or color. It is also invariant to rotation
+as seen by the upside-down arrow in Figure 2. It was able to rotate the 
+arrow to be upside like the template image. 

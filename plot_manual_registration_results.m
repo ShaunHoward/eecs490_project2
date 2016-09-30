@@ -1,4 +1,4 @@
-function plot_manual_registration_results(fixed,moving,warped,registered,gray_error,rgb_error,xcorr,counter)
+function plot_manual_registration_results(fixed,moving,warped,registered,gray_error,rgb_error,xcorr,counter,write_output)
     % plot results with subplot tight without spaces between images
     % author: Shaun Howard (smh150@case.edu)
 
@@ -16,9 +16,12 @@ function plot_manual_registration_results(fixed,moving,warped,registered,gray_er
     imshow(gray_error);
     subplot_tight(2,3,6,margins);
     imshowpair(rgb_error,fixed);
-    % export subplot figure as bmp image
-    output_path = sprintf('output/manual_registration_trial_%d.bmp', counter);
-    export_fig(output_path);
+    
+    if write_output
+        % export subplot figure as bmp image
+        output_path = sprintf('output/manual_registration_trial_%d.bmp', counter);
+        export_fig(output_path);
+    end
     
     % plot normalized xcorr
     xcorr_size=size(xcorr);
@@ -31,8 +34,10 @@ function plot_manual_registration_results(fixed,moving,warped,registered,gray_er
     colorbar
     title(xcorr_title);
     
-    % export the normalized cross-correlation
-    output_path = sprintf('output/manual_registration_trial_%d_xcorr.bmp', counter);
-    export_fig(output_path);
+    if write_output
+        % export the normalized cross-correlation
+        output_path = sprintf('output/manual_registration_trial_%d_xcorr.bmp', counter);
+        export_fig(output_path);
+    end
 end
 
