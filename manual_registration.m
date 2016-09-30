@@ -11,7 +11,8 @@ function [warped,registered,gray_error,rgb_error,mse,moving_points,fixed_points,
     % of registration,selected points in moving image, selected points in 
     % fixed image, the correlation coefficient of registration and
     % the normalized cross-correlation matrix of registration results.
-    
+    % author: Shaun Howard (smh150@case.edu)
+
     %invoke MATLAB two image selection tool
     [moving_points,fixed_points] = cpselect(moving(:,:,1),fixed, 'Wait', true);
 

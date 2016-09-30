@@ -1,5 +1,7 @@
 function plot_manual_registration_results(fixed,moving,warped,registered,gray_error,rgb_error,xcorr,counter)
     % plot results with subplot tight without spaces between images
+    % author: Shaun Howard (smh150@case.edu)
+
     margins=[0 0];
     figure('name', sprintf('Manual Registration Trial %d Results with Error', counter));
     subplot_tight(2,3,1,margins);

@@ -1,5 +1,7 @@
 function plot_sift_flow_results(fixed,moving,sift_fixed,sift_moving,registered,gray_error,rgb_error,xcorr,counter)
     % plot results with subplot tight without spaces between images
+    % author: Shaun Howard (smh150@case.edu)
+
     margins=[0 0];
     figure('name', sprintf('SIFTFlow Trial %d Results with Error', counter));
     subplot_tight(2,4,1,margins);

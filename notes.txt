@@ -19,3 +19,9 @@ that is intensity-based. Hence, this method is able to apply a fusion of
 the geometric and intensity-based algorithms using SIFT flow descriptors
 as the input to the optical flow algorithm. Based on the graphs, we can
 gather that the SIFTFLow registration is invariant to lighting.
+
+
+external libraries used from FEX and IAT website:
+subplot_tight
+iat - image alignment toolbox
+normxcorr2_general

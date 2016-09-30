@@ -6,6 +6,7 @@ function [sift_fixed,sift_moving,registered,gray_error,rgb_error,mse,r,xcorr]=..
     % error images, mean-squared error of registration, the correlation
     % coefficient of registration and the normalized cross-correlation 
     % matrix of the image registration.
+    % author: Shaun Howard (smh150@case.edu)
 
     % convert images to grayscale
     fixed = rgb2gray(fixed);
